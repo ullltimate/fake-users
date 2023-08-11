@@ -3,10 +3,10 @@ import { Col, Container, Row, Button, Table } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import User from './components/User'
 import { useEffect, useState } from 'react';
-import { faker, fakerRU, fakerUK } from '@faker-js/faker';
+import { faker, fakerRU, fakerUK, fakerPL } from '@faker-js/faker';
 
 function App() {
-  const [region, setRegion] = useState('en_US');
+  const [region, setRegion] = useState('pl');
   const [slider, setSlider] = useState('0');
   const [field, setField] = useState('');
   const [seed, setSeed] = useState(faker.seed());
@@ -15,9 +15,9 @@ function App() {
 
   useEffect(() => {
     switch(region){
-      case 'en_US':
+      case 'pl':
         faker.seed(seed);
-        setUsers(createUsers(faker, 20));
+        setUsers(createUsers(fakerPL, 20));
         break;
       case 'ru':
         fakerRU.seed(seed);
@@ -34,7 +34,7 @@ function App() {
       id: region.database.mongodbObjectId(),
       name: region.person.fullName(),
       address: [region.location.city(), region.location.streetAddress({ useFullAddress: true })],
-      phone: region.phone.number('+48 91 ### ## ##'),
+      phone: region.phone.number(),
     }
   }
 
@@ -44,8 +44,8 @@ function App() {
 
   function scroll(){
       switch(region){
-        case 'en_US':
-          loadContent(faker);
+        case 'pl':
+          loadContent(fakerPL);
           break;
         case 'ru':
           loadContent(fakerRU);
@@ -92,7 +92,7 @@ function App() {
           <Row className='justify-content-end'>
             <Col md={6}>
               <Form.Select aria-label="Default select example" className='m-3 mw-25 bg-primary text-white' value={region} onChange={(e) => setRegion(e.target.value)}>
-                <option value="en_US">United States</option>
+                <option value="pl">Poland</option>
                 <option value="ru">Россия</option>
                 <option value="uk">Україна</option>
               </Form.Select>
