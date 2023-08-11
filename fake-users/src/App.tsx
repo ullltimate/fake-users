@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Container, Row, Button, Table } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import User from '../components/User'
+import User from './components/User'
 
 function App() {
   return (
