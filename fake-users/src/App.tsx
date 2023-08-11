@@ -16,12 +16,15 @@ function App() {
   useEffect(() => {
     switch(region){
       case 'en_US':
+        faker.seed(seed);
         setUsers(createUsers(faker, 20));
         break;
       case 'ru':
+        fakerRU.seed(seed);
         setUsers(createUsers(fakerRU, 20));
         break;
       case 'uk':
+        fakerUK.seed(seed);
         setUsers(createUsers(fakerUK, 20));
     }
   },[seed, region])
@@ -36,9 +39,51 @@ function App() {
   }
 
   const createUsers = (region: any, count: number) => {
-    region.seed(seed);
     return faker.helpers.multiple(() => createUser(region), {count: count})
   }
+
+  function scroll(){
+      switch(region){
+        case 'en_US':
+          loadContent(faker);
+          break;
+        case 'ru':
+          loadContent(fakerRU);
+          break;
+        case 'uk':
+          loadContent(fakerUK);
+      }
+    
+  }
+  function loadContent(region: any){
+    setUsers(users.concat(createUsers(region, 10)))
+  }
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop !==
+        document.documentElement.offsetHeight
+      )
+      return;
+      setLoading(true);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  console.log(loading);
+
+  useEffect(() => {
+    if(loading){
+      scroll();
+      setLoading(false)
+    }
+  },[loading])
 
   return (
     <>
