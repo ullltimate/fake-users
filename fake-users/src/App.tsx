@@ -2,15 +2,43 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Container, Row, Button, Table } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import User from './components/User'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { faker, fakerRU, fakerUK } from '@faker-js/faker';
 
 function App() {
   const [region, setRegion] = useState('en_US');
   const [slider, setSlider] = useState('0');
   const [field, setField] = useState('');
+  const [seed, setSeed] = useState(faker.seed());
+  const [users, setUsers] = useState<any[]>([]);
   const maxValue = 10;
-  console.log(slider);
-  console.log(field);
+
+  useEffect(() => {
+    switch(region){
+      case 'en_US':
+        setUsers(createUsers(faker, 20));
+        break;
+      case 'ru':
+        setUsers(createUsers(fakerRU, 20));
+        break;
+      case 'uk':
+        setUsers(createUsers(fakerUK, 20));
+    }
+  },[seed, region])
+
+  const createUser = (region:any) => {
+    return {
+      id: region.database.mongodbObjectId(),
+      name: region.person.fullName(),
+      address: [region.location.city(), region.location.streetAddress({ useFullAddress: true })],
+      phone: region.phone.number('+48 91 ### ## ##'),
+    }
+  }
+
+  const createUsers = (region: any, count: number) => {
+    region.seed(seed);
+    return faker.helpers.multiple(() => createUser(region), {count: count})
+  }
 
   return (
     <>
@@ -25,17 +53,17 @@ function App() {
               </Form.Select>
               <Form.Group>
                 <Form.Label className='mx-3'>Mistake</Form.Label>
-                <Form.Range className='mx-3' min={0} max={10} step={0.25} value={slider} onChange={(e) => {setSlider(e.target.value); setField(e.target.value)}}/>
+                <Form.Range className='mx-3' min={0} max={maxValue} step={0.25} value={slider} onChange={(e) => {setSlider(e.target.value); setField(e.target.value)}}/>
                 <Form.Control className='m-3' placeholder="0" type='number' min={0} max={1000} step={0.25} value={field} onChange={(e) => {setField(e.target.value); setSlider(`${Math.min(Number(e.target.value), maxValue)}`)}}/>
               </Form.Group>
               <Row className='mx-3'>
                 <Col className='p-0'>
                   <Form.Group controlId="formGridEmail">
-                    <Form.Control type="number" placeholder="Enter seed" min={0}/>
+                    <Form.Control type="number" placeholder="Enter seed" min={0} value={seed} onChange={(e) => setSeed(Number(e.target.value))}/>
                   </Form.Group>
                 </Col>
                 <Col>
-                  <Button variant="primary">
+                  <Button variant="primary" onClick={()=>setSeed(faker.seed())}>
                     Random
                   </Button>
                 </Col>
@@ -54,14 +82,7 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>3343dedw33</td>
-              <td>Mark Polo</td>
-              <td>Otto</td>
-              <td>44 57 88 90</td>
-            </tr>
-            <User/>
+            {users.map((e, i) => <User key={e.id} number={i+1} id={e.id} name={e.name} address={e.address} phone={e.phone}/>)}
           </tbody>
         </Table>
       </Container>

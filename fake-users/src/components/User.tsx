@@ -1,12 +1,12 @@
-function User() {
+function User(props: any) {
     return (
       <>
           <tr>
-            <td>1</td>
-            <td>3343dedw33</td>
-            <td>Mark Polo</td>
-            <td>Otto</td>
-            <td>44 57 88 90</td>
+            <td>{props.number}</td>
+            <td>{props.id}</td>
+            <td>{props.name}</td>
+            <td>{props.address.join(' ')}</td>
+            <td>{props.phone}</td>
           </tr>
       </>
     )
