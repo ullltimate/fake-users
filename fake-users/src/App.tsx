@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { faker, fakerRU, fakerUK, fakerPL } from '@faker-js/faker';
 import { makeMistakes } from './helpers/helper';
 import { CSVLink } from "react-csv";
+import './App.css'
 
 function App() {
   const [region, setRegion] = useState('pl');
@@ -100,35 +101,40 @@ function App() {
     <>
       <Container>
         <Form>
-          <Row className='justify-content-end'>
-            <Col md={6}>
-              <Form.Select aria-label="Default select example" className='m-3 mw-25 bg-primary text-white' value={region} onChange={(e) => setRegion(e.target.value)}>
+          <Row className='justify-content-start align-items-center'>
+            <Col md={3}>
+              <Form.Select aria-label="Default select example" className='my-3 mw-25 bg-primary text-white' value={region} onChange={(e) => setRegion(e.target.value)}>
                 <option value="pl">Poland</option>
                 <option value="ru">Россия</option>
                 <option value="uk">Україна</option>
               </Form.Select>
-              <Form.Group>
-                <Form.Label className='mx-3'>Mistake</Form.Label>
-                <Form.Range className='mx-3' min={0} max={maxValue} step={0.25} value={slider} onChange={(e) => {setSlider(e.target.value); setField(e.target.value)}}/>
-                <Form.Control className='m-3' placeholder="0" type='number' min={0} max={1000} step={0.25} value={field} onChange={(e) => {(Number(e.target.value)>1000) ? setField('1000') : setField(e.target.value); setSlider(`${Math.min(Number(e.target.value), maxValue)}`)}}/>
-              </Form.Group>
-              <Row className='mx-3'>
-                <Col className='p-0'>
-                  <Form.Group controlId="formGridEmail">
-                    <Form.Control type="number" placeholder="Enter seed" min={0} value={seed} onChange={(e) => setSeed(Number(e.target.value))}/>
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Button variant="primary" onClick={()=>setSeed(faker.seed())}>
-                    Random
-                  </Button>
-                </Col>
-              </Row>
             </Col>
-            <CSVLink data={users}>Export to CSV</CSVLink>
+            <Col md={5}>
+              <CSVLink data={users}><Button variant="primary">Export to CSV</Button></CSVLink>
+            </Col>
+          </Row>
+          <Row className='justify-content-start align-items-center'>
+            <Col md={3}>
+              <Form.Group controlId="formGridEmail">
+                <Form.Control className='my-3' type="number" placeholder="Enter seed" min={0} value={seed} onChange={(e) => setSeed(Number(e.target.value))}/>
+              </Form.Group>
+            </Col>
+            <Col md={2}>
+              <Button variant="primary" onClick={()=>setSeed(faker.seed())}>
+                Random
+              </Button>
+            </Col>
+          </Row>
+          <Row className='justify-content-start align-items-center'>
+            <Col md={3}>
+                <Form.Range className='my-3' min={0} max={maxValue} step={0.25} value={slider} onChange={(e) => {setSlider(e.target.value); setField(e.target.value)}}/>
+            </Col>
+            <Col md={1}>
+              <Form.Control className='my-3' placeholder="0" type='number' min={0} max={1000} step={0.25} value={field} onChange={(e) => {(Number(e.target.value)>1000) ? setField('1000') : setField(e.target.value); setSlider(`${Math.min(Number(e.target.value), maxValue)}`)}}/>
+            </Col>
           </Row>
         </Form>
-        <Table bordered hover className='my-5'>
+        <Table bordered hover>
           <thead className='table-primary'>
             <tr>
               <th>№</th>
