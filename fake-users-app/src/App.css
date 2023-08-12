@@ -1,0 +1,5 @@
+@media screen and (max-width: 644px) {
+    table tr > *:nth-child(2) {
+        display: none;
+    }
+}
