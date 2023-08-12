@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import User from './components/User'
 import { useEffect, useState } from 'react';
 import { faker, fakerRU, fakerUK, fakerPL } from '@faker-js/faker';
+import { makeMistakes } from './helpers/helper';
 
 function App() {
   const [region, setRegion] = useState('pl');
@@ -11,12 +12,13 @@ function App() {
   const [field, setField] = useState('');
   const [seed, setSeed] = useState(faker.seed());
   const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const maxValue = 10;
 
   useEffect(() => {
     switch(region){
       case 'pl':
-        faker.seed(seed);
+        fakerPL.seed(seed);
         setUsers(createUsers(fakerPL, 20));
         break;
       case 'ru':
@@ -27,15 +29,25 @@ function App() {
         fakerUK.seed(seed);
         setUsers(createUsers(fakerUK, 20));
     }
-  },[seed, region])
+  },[seed, region, field])
 
-  const createUser = (region:any) => {
-    return {
-      id: region.database.mongodbObjectId(),
-      name: region.person.fullName(),
-      address: [region.location.city(), region.location.streetAddress({ useFullAddress: true })],
-      phone: region.phone.number(),
+  const createUser = (fakerRegion:any) => {
+    if (Number(field) === 0) {
+      return {
+        id: fakerRegion.database.mongodbObjectId(),
+        name: fakerRegion.person.fullName(),
+        address: fakerRegion.location.streetAddress(),
+        phone: fakerRegion.phone.number(),
+      }
+    } else {
+      return {
+        id: fakerRegion.database.mongodbObjectId(),
+        name: makeMistakes(fakerRegion.person.fullName(), region, false, Number(field)),
+        address: makeMistakes(fakerRegion.location.streetAddress(), region, false, Number(field)),
+        phone: makeMistakes(fakerRegion.phone.number(), region, true, Number(field)),
+      }
     }
+
   }
 
   const createUsers = (region: any, count: number) => {
@@ -58,7 +70,6 @@ function App() {
   function loadContent(region: any){
     setUsers(users.concat(createUsers(region, 10)))
   }
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,7 +87,6 @@ function App() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  console.log(loading);
 
   useEffect(() => {
     if(loading){
@@ -99,7 +109,7 @@ function App() {
               <Form.Group>
                 <Form.Label className='mx-3'>Mistake</Form.Label>
                 <Form.Range className='mx-3' min={0} max={maxValue} step={0.25} value={slider} onChange={(e) => {setSlider(e.target.value); setField(e.target.value)}}/>
-                <Form.Control className='m-3' placeholder="0" type='number' min={0} max={1000} step={0.25} value={field} onChange={(e) => {setField(e.target.value); setSlider(`${Math.min(Number(e.target.value), maxValue)}`)}}/>
+                <Form.Control className='m-3' placeholder="0" type='number' min={0} max={1000} step={0.25} value={field} onChange={(e) => {(Number(e.target.value)>1000) ? setField('1000') : setField(e.target.value); setSlider(`${Math.min(Number(e.target.value), maxValue)}`)}}/>
               </Form.Group>
               <Row className='mx-3'>
                 <Col className='p-0'>
