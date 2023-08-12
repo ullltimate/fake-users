@@ -10,21 +10,21 @@ const arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 export function deleteSymbol(str: string){
     let array = str.split('');
-    array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (e,i) =>  i )), 1);
+    array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (_,i) =>  i )), 1);
     return array.join('');
 }
 
 export function addSymbol(str: string, region: string, bool: boolean){
     let array = str.split('');
     if(bool){
-        array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (e,i) =>  i )), 0, faker.helpers.arrayElement(arrNum));
+        array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (_,i) =>  i )), 0, faker.helpers.arrayElement(arrNum));
     } else {
         if (region === 'pl'){
-            array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (e,i) =>  i )), 0, faker.helpers.arrayElement(arrPl));
+            array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (_,i) =>  i )), 0, faker.helpers.arrayElement(arrPl));
         } else if(region === 'ru'){
-            array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (e,i) =>  i )), 0, faker.helpers.arrayElement(arrRu));
+            array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (_,i) =>  i )), 0, faker.helpers.arrayElement(arrRu));
         } else if(region === 'uk'){
-            array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (e,i) =>  i )), 0, faker.helpers.arrayElement(arrUk));
+            array.splice(faker.helpers.arrayElement(Array.from({ length: array.length }, (_,i) =>  i )), 0, faker.helpers.arrayElement(arrUk));
         }
     }
     return array.join('');
@@ -32,7 +32,7 @@ export function addSymbol(str: string, region: string, bool: boolean){
 
 export function swapSymbol(str: string){
     let array = str.split('');
-    let random = faker.helpers.arrayElement(Array.from({ length: array.length-1 }, (e,i) =>  i+1 ));
+    let random = faker.helpers.arrayElement(Array.from({ length: array.length-1 }, (_,i) =>  i+1 ));
     let elem = array[random]
     array[random] = array[random+1];
     array[random+1] = elem;
