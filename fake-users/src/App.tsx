@@ -5,6 +5,7 @@ import User from './components/User'
 import { useEffect, useState } from 'react';
 import { faker, fakerRU, fakerUK, fakerPL } from '@faker-js/faker';
 import { makeMistakes } from './helpers/helper';
+import { CSVLink } from "react-csv";
 
 function App() {
   const [region, setRegion] = useState('pl');
@@ -124,6 +125,7 @@ function App() {
                 </Col>
               </Row>
             </Col>
+            <CSVLink data={users}>Export to CSV</CSVLink>
           </Row>
         </Form>
         <Table bordered hover className='my-5'>
