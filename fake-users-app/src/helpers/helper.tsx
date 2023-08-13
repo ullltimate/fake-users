@@ -1,12 +1,14 @@
 import { faker } from "@faker-js/faker";
 
-const arrPl = ['a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 
+const arrPl = [' ', 'a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 
 'm', 'n', 'ń', 'o', 'ó', 'p', 'q', 'r', 's', 'ś', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ź', 'ż'];
-const arrRu = ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о',
+const arrRu = [' ', 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о',
 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'];
-const arrUk = ['а', 'б', 'в', 'г', 'ґ', 'д', 'е', 'є', 'ж', 'з', 'и', 'і', 'ї', 'й', 'к', 'л',
+const arrUk = [ ' ', 'а', 'б', 'в', 'г', 'ґ', 'д', 'е', 'є', 'ж', 'з', 'и', 'і', 'ї', 'й', 'к', 'л',
 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ю', 'я'];
-const arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const arrNum = [ '-',' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const maxStrLength = 40;
+const minStrLength = 5;
 
 export function deleteSymbol(str: string){
     let array = str.split('');
@@ -40,15 +42,16 @@ export function swapSymbol(str: string){
 }
 
 export function randomError(str: string, region: string, bool: boolean){
-    let arrayError = [deleteSymbol(str), addSymbol(str, region, bool), swapSymbol(str)]
+    let arrayError = [deleteSymbol(str), addSymbol(str, region, bool), swapSymbol(str)];
+    if (str.length<minStrLength) arrayError = [addSymbol(str, region, bool), swapSymbol(str)];
+    if (str.length>maxStrLength) arrayError = [deleteSymbol(str), swapSymbol(str)];
     let randomError = faker.helpers.arrayElement(arrayError);
     return randomError
 }
 
-export function makeMistakes(str: string, region: string, bool: boolean, count: number){
+export function makeMistakes(str: string, region: string, bool: boolean, count: number): string{
     let countMistake: number = Math.trunc(count);
     let prob: number = count - countMistake;
-    if (countMistake>10) countMistake = 10;
     for(let i=0; i<countMistake; i++){
         str = randomError(str, region, bool);
     }
